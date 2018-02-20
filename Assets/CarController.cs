@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CarController : MonoBehaviour {
+public class CarController : EventReceiver {
 	public List<AxleInfo> axleInfos; // the information about each individual axle
 	public float maxMotorTorque; // maximum torque the motor can apply to wheel
 	public float maxSteeringAngle; // maximum steer angle the wheel can have
@@ -24,6 +24,40 @@ public class CarController : MonoBehaviour {
 		    axleInfo.rightWheel.motorTorque = motor - steering;
 		}
 	    }
+	}
+
+	public override int parseEvent(string message, ref string response)
+	{
+		int retVal = -1;
+		int temp  = base.parseEvent(message, ref response);//check if message is for us
+		if(temp == -1){
+			return -1;
+		}
+		else{//remove header until first .
+			message = message.Substring(temp);
+		}
+		Debug.Log("CarController received Event:'" + message + "'");
+		if(message == "identify"){
+			response = gameObject.name + ":forward,back,stop";
+			retVal = 0;
+		}
+		else if(message == "forward"){
+			Debug.Log("forward");
+			myMotor = 4;
+			retVal = 0;
+		}
+		else if(message == "back"){
+			Debug.Log("forward");
+			myMotor = -4;
+			retVal = 0;
+		}
+		else if(message == "stop"){
+			Debug.Log("forward");
+			myMotor = 0;
+			retVal = 0;
+		}
+
+		return retVal;
 	}
 }
 

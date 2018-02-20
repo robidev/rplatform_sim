@@ -3,48 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkListner : MonoBehaviour {
-	public GameObject player;
-	public UDPRT myUDPRT;
+	//public GameObject player;
+	public List<GameObject> gameObjectList;
+	public UDPRT myUDPRT = null;
 	// Use this for initialization
 	void Start () {
-		myUDPRT = UDPRT.CreateInstance(5000);
+		myUDPRT = new UDPRT(5000);
 		Debug.Log("listening on UDP 5000");
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(UDPRT.ReceivedMsg != null){
-			Debug.Log("Received udp:" + UDPRT.ReceivedMsg);
-			if(UDPRT.ReceivedMsg == "forward"){
-				Debug.Log("forward");
-				var car = player.GetComponent<CarController>();
-				if (car != null)
-					car.myMotor = 4;
-				else
-					Debug.Log("cannot find car");
+		if(myUDPRT.ReceivedMsg != null){
+			Debug.Log("Received udp packet:'" + myUDPRT.ReceivedMsg + "'");
+			if(HandleMessage(myUDPRT.ReceivedMsg) == -1){
+				Debug.Log("Could not parse message:" + myUDPRT.ReceivedMsg);
 			}
-			if(UDPRT.ReceivedMsg == "back"){
-				Debug.Log("forward");
-				var car = player.GetComponent<CarController>();
-				if (car != null)
-					car.myMotor = -4;
-				else
-					Debug.Log("cannot find car");
-			}
-			if(UDPRT.ReceivedMsg == "stop"){
-				Debug.Log("forward");
-				var car = player.GetComponent<CarController>();
-				if (car != null)
-					car.myMotor = 0;
-				else
-					Debug.Log("cannot find car");
-			}
-			UDPRT.ReceivedMsg = null;
+			myUDPRT.ReceivedMsg = null;
 		}
 	}
 	void OnDestroy() {
-		Destroy(myUDPRT);
+		myUDPRT.OnDestroy();
+		if (myUDPRT != null)
+			myUDPRT = null;
 		Debug.Log("NetworkListner was destroyed");
+	}
+
+	int HandleMessage(string message)
+	{
+		int retVal = -1;
+		foreach(GameObject gameObject in gameObjectList )
+		{
+			var eventReceiver = gameObject.GetComponent<EventReceiver>();
+			if(eventReceiver != null){
+				string response = "";
+				int temp = eventReceiver.parseEvent(message, ref response);
+				if(temp != -1){
+					Debug.Log(myUDPRT.IP.Address.ToString() + " msg:'" + response + "'");
+					UDPRT SendUDP = new UDPRT(5001, myUDPRT.IP.Address.ToString(), response);
+					if (!SendUDP.messageSent){;}
+					retVal++; // increment each time we have a succesful parse
+				}
+			}
+			else{
+				Debug.Log("Could not find EventReceiver for '" + gameObject.name + "'");
+			}
+
+		}
+		return retVal;
 	}
 }

@@ -4,34 +4,43 @@ using System.Net;
 using System.Text;
 using System;
  
-public class UDPRT : ScriptableObject
+public class UDPRT
 {
-    static public string ReceivedMsg;                                      // INPUT DATA
-    static private UdpClient udpc;
-    static  IPEndPoint IP;
-    static private object obj;
-    static private AsyncCallback AC;
-    static byte[] DATA;
+    public string ReceivedMsg;                                      // INPUT DATA
+    public IPEndPoint IP;
+    public bool messageSent = false;
+
+    private UdpClient udpc;
+    private object obj;
+    private AsyncCallback AC;
+    private byte[] DATA;
+
    
-    public static UDPRT CreateInstance(int Port)                          // RECEVE UDP
+    public UDPRT(int Port)                          // RECEVE UDP
     {
             IP = new IPEndPoint(IPAddress.Any, Port);
             udpc = new UdpClient(Port);
             AC = new AsyncCallback(ReceiveIt);
+	    obj = new object();
             StartUdpReceive();
-           return ScriptableObject.CreateInstance<UDPRT>();
     }
  
-    public static UDPRT CreateInstance(int Port, string Host,string msg)  // SEND UDP
+    public UDPRT(int Port, string Host,string msg)  // SEND UDP
     {
         udpc = new UdpClient(Host,Port);
         AC = new AsyncCallback(SendIt);
         byte[] data = Encoding.UTF8.GetBytes(msg);
         udpc.BeginSend(data, data.Length, AC, obj);
-        return ScriptableObject.CreateInstance<UDPRT>();
+    }
+
+    public UDPRT(int Port, string Host,byte[] data)  // SEND UDP
+    {
+        udpc = new UdpClient(Host,Port);
+        AC = new AsyncCallback(SendIt);
+        udpc.BeginSend(data, data.Length, AC, obj);
     }
  
-    static void ReceiveIt(IAsyncResult result)
+    private void ReceiveIt(IAsyncResult result)
     {
         DATA = (udpc.EndReceive(result, ref IP));
         //Debug.Log(Encoding.UTF8.GetString(DATA));
@@ -39,20 +48,27 @@ public class UDPRT : ScriptableObject
         StartUdpReceive();
     }
  
-    static void SendIt(IAsyncResult result)
+    private void SendIt(IAsyncResult result)
     {
         udpc.EndSend(result);
+	//Debug.Log("UDP message send");
+	messageSent = true;
     }
  
  
-    static void StartUdpReceive()
+    private void StartUdpReceive()
     {
         udpc.BeginReceive(AC, obj);
     }
 
-    void OnDestroy() {
+    public void OnDestroy() {
         udpc.Close();
         Debug.Log("UDPRT was destroyed");
     }
+
+    /*~UDPRT() {
+        udpc.Close();
+        Debug.Log("UDPRT destructor");
+    }*/
 }
  
