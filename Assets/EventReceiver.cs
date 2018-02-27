@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EventReceiver : MonoBehaviour {
 	
+	private string all = "all.";
 	// Use this for initialization
 	void Start () {
 		
@@ -20,8 +21,8 @@ public class EventReceiver : MonoBehaviour {
 		if(message.StartsWith(gameObject.name + ".")){
 			retVal = gameObject.name.Length + 1;
 		}
-		else if(message.StartsWith("all.")){
-			retVal = 4;
+		else if(message.StartsWith(all)){
+			retVal = all.Length;
 		}
 		return retVal;
 	}

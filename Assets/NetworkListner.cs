@@ -51,6 +51,9 @@ public class NetworkListner : MonoBehaviour {
 			}
 
 		}
+                if(message == "all.identify"){
+                	UDPRT SendUDP_resp = new UDPRT(5001, myUDPRT.IP.Address.ToString(), "identify:done");
+		}
 		return retVal;
 	}
 }

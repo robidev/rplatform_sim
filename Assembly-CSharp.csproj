@@ -53,9 +53,13 @@
   <ItemGroup>
      <Compile Include="Assets\CamController.cs" />
      <Compile Include="Assets\CarController.cs" />
+     <Compile Include="Assets\DisplayController.cs" />
      <Compile Include="Assets\EventReceiver.cs" />
+     <Compile Include="Assets\GPIOController.cs" />
      <Compile Include="Assets\GzipUtil.cs" />
      <Compile Include="Assets\NetworkListner.cs" />
+     <Compile Include="Assets\ServoController.cs" />
+     <Compile Include="Assets\StepperController.cs" />
      <Compile Include="Assets\TextureScale.cs" />
      <Compile Include="Assets\UDPRT.cs" />
  <Reference Include="UnityEngine.UI">

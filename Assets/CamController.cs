@@ -22,7 +22,7 @@ public class CamController : EventReceiver {
 		}
 		Debug.Log("CamController received Event:'" + message + "'");
 		if(message == "identify"){
-			response = gameObject.name + ":getimage";
+			response = "cam:" + gameObject.name; // + ":getimage";
 			retVal = 0;
 		}
 		else if(message == "getimage"){
@@ -41,7 +41,7 @@ public class CamController : EventReceiver {
 
 		var newTex = Instantiate (image);
 		TextureScale.Bilinear (newTex, 320, 320);
-		obj.GetComponent<Renderer>().material.mainTexture = newTex;
+		//obj.GetComponent<Renderer>().material.mainTexture = newTex;
 
 		var zipdata = GzipUtil.CompressEncode(newTex.GetRawTextureData());
 		//Debug.Log("before:" + newTex.GetRawTextureData().Length + " after:" + zipdata.Length);

@@ -38,7 +38,7 @@ public class CarController : EventReceiver {
 		}
 		Debug.Log("CarController received Event:'" + message + "'");
 		if(message == "identify"){
-			response = gameObject.name + ":forward,back,stop";
+			response = "car:" + gameObject.name; // + ":forward,back,stop";
 			retVal = 0;
 		}
 		else if(message == "forward"){
