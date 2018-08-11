@@ -6,10 +6,10 @@ public class DisplayController : EventReceiver {
 
 	private string setimage = "setimage:";
 
-	public override int parseEvent(string message, ref string response)
+	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
 	{
 		int retVal = -1;
-		int temp  = base.parseEvent(message, ref response);//check if message is for us
+		int temp  = base.parseEvent(message, ref response, ref MyUdp);//check if message is for us
 
 		if(temp == -1){
 			return -1;
@@ -19,7 +19,7 @@ public class DisplayController : EventReceiver {
 		}
 		Debug.Log("DisplayController received Event:'" + message + "'");
 		if(message == "identify"){
-			response = "display:" + gameObject.name; // + ":setimage";
+			response = "id:display:" + gameObject.name; // + ":setimage";
 			retVal = 0;
 		}
 		else if(message.StartsWith(setimage) == true){
@@ -28,7 +28,7 @@ public class DisplayController : EventReceiver {
 			//decode message (gzip compressed data)
 			//set newTex to received image data
 			//set gameObject.GetComponent<Renderer>().material.mainTexture = newTex;
-			response = "OK";
+			response = gameObject.name + "OK";
 			retVal = 0;
 		}
 		return retVal;

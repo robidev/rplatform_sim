@@ -7,10 +7,10 @@ public class StepperController : EventReceiver {
 	private string set_ = "set:";
 	private string steps = "steps:";
 
-	public override int parseEvent(string message, ref string response)
+	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
 	{
 		int retVal = -1;
-		int temp  = base.parseEvent(message, ref response);//check if message is for us
+		int temp  = base.parseEvent(message, ref response, ref MyUdp);//check if message is for us
 
 		if(temp == -1){
 			return -1;
@@ -20,7 +20,7 @@ public class StepperController : EventReceiver {
 		}
 		Debug.Log("StepperController received Event:'" + message + "'");
 		if(message == "identify"){
-			response = "stepper:" + gameObject.name; // + ":stepper";
+			response = "id:stepper:" + gameObject.name; // + ":stepper";
 			retVal = 0;
 		}
 		else if(message.StartsWith(set_) == true){
@@ -28,7 +28,7 @@ public class StepperController : EventReceiver {
 			message = message.Substring(set_.Length);
 			//
 			
-			response = "OK";
+			response = gameObject.name + "OK";
 			retVal = 0;
 		}
 		else if(message.StartsWith(steps) == true){
@@ -36,7 +36,7 @@ public class StepperController : EventReceiver {
 			message = message.Substring(steps.Length);
 			//
 			
-			response = "OK";
+			response = gameObject.name + "OK";
 			retVal = 0;
 		}
 		return retVal;

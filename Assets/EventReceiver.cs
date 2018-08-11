@@ -15,7 +15,7 @@ public class EventReceiver : MonoBehaviour {
 		
 	}
 
-	public virtual int parseEvent(string message, ref string response)
+	public virtual int parseEvent(string message, ref string response, ref UDPRT MyUdp)
 	{
 		int retVal = -1;
 		if(message.StartsWith(gameObject.name + ".")){

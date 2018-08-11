@@ -16,10 +16,10 @@ public class ServoController : EventReceiver {
 		motor = hinge.motor;
 	}
 
-	public override int parseEvent(string message, ref string response)
+	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
 	{
 		int retVal = -1;
-		int temp  = base.parseEvent(message, ref response);//check if message is for us
+		int temp  = base.parseEvent(message, ref response, ref MyUdp);//check if message is for us
 
 		if(temp == -1){
 			return -1;
@@ -29,7 +29,7 @@ public class ServoController : EventReceiver {
 		}
 		Debug.Log("ServoController received Event:'" + message + "'");
 		if(message == "identify"){
-			response = "servo:" + gameObject.name;// + ":servo";
+			response = "id:servo:" + gameObject.name;// + ":servo";
 			retVal = 0;
 		}
 		else if(message.StartsWith(servo) == true){
@@ -42,7 +42,7 @@ public class ServoController : EventReceiver {
 				targetAngle = (float)x;
 			}
 
-			response = "OK";
+			response = gameObject.name + "OK";
 			retVal = 0;
 		}
 		return retVal;

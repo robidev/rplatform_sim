@@ -2,6 +2,8 @@
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Collections.Generic;
+
 using System;
  
 public class UDPRT
@@ -14,6 +16,7 @@ public class UDPRT
     private object obj;
     private AsyncCallback AC;
     private byte[] DATA;
+    private List<byte[]> PacketList;
 
    
     public UDPRT(int Port)                          // RECEVE UDP
@@ -23,6 +26,7 @@ public class UDPRT
             AC = new AsyncCallback(ReceiveIt);
 	    obj = new object();
             StartUdpReceive();
+            PacketList = new List<byte[]>();
     }
  
     public UDPRT(int Port, string Host,string msg)  // SEND UDP
@@ -66,6 +70,22 @@ public class UDPRT
         Debug.Log("UDPRT was destroyed");
     }
 
+    public void AddToPacketList(byte[] data) {
+        PacketList.Add(data);
+    }
+
+    private void SendProcessor() {
+        while(true){
+            if(PacketList.Count > 0) {
+                 AC = new AsyncCallback(SendIt);
+                 udpc.BeginSend(PacketList[0], PacketList[0].Length, AC, obj);
+                 PacketList.RemoveAt(0);
+            }
+            else {
+                break;
+            }
+        }
+    }
     /*~UDPRT() {
         udpc.Close();
         Debug.Log("UDPRT destructor");

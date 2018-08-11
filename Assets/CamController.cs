@@ -10,10 +10,10 @@ public class CamController : EventReceiver {
 	public GameObject obj;
 
 	// Use this for initialization
-	public override int parseEvent(string message, ref string response)
+	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
 	{
 		int retVal = -1;
-		int temp  = base.parseEvent(message, ref response);//check if message is for us
+		int temp  = base.parseEvent(message, ref response, ref MyUdp);//check if message is for us
 		if(temp == -1){
 			return -1;
 		}
@@ -22,12 +22,12 @@ public class CamController : EventReceiver {
 		}
 		Debug.Log("CamController received Event:'" + message + "'");
 		if(message == "identify"){
-			response = "cam:" + gameObject.name; // + ":getimage";
+			response = "id:cam:" + gameObject.name; // + ":getimage";
 			retVal = 0;
 		}
 		else if(message == "getimage"){
 			Debug.Log("getimage");
-			response = "OK";
+			response = gameObject.name + "OK";
 			retVal = 0;
 			grab = true;
 		}

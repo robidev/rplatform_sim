@@ -38,7 +38,7 @@ public class NetworkListner : MonoBehaviour {
 			var eventReceiver = gameObject.GetComponent<EventReceiver>();
 			if(eventReceiver != null){
 				string response = "";
-				int temp = eventReceiver.parseEvent(message, ref response);
+				int temp = eventReceiver.parseEvent(message, ref response, ref myUDPRT);
 				if(temp != -1){
 					Debug.Log(myUDPRT.IP.Address.ToString() + " msg:'" + response + "'");
 					UDPRT SendUDP = new UDPRT(5001, myUDPRT.IP.Address.ToString(), response);

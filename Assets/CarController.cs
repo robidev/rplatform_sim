@@ -26,10 +26,10 @@ public class CarController : EventReceiver {
 	    }
 	}
 
-	public override int parseEvent(string message, ref string response)
+	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
 	{
 		int retVal = -1;
-		int temp  = base.parseEvent(message, ref response);//check if message is for us
+		int temp  = base.parseEvent(message, ref response, ref MyUdp);//check if message is for us
 		if(temp == -1){
 			return -1;
 		}
@@ -38,7 +38,7 @@ public class CarController : EventReceiver {
 		}
 		Debug.Log("CarController received Event:'" + message + "'");
 		if(message == "identify"){
-			response = "car:" + gameObject.name; // + ":forward,back,stop";
+			response = "id:car:" + gameObject.name; // + ":forward,back,stop";
 			retVal = 0;
 		}
 		else if(message == "forward"){
@@ -47,12 +47,12 @@ public class CarController : EventReceiver {
 			retVal = 0;
 		}
 		else if(message == "back"){
-			Debug.Log("forward");
+			Debug.Log("back");
 			myMotor = -4;
 			retVal = 0;
 		}
 		else if(message == "stop"){
-			Debug.Log("forward");
+			Debug.Log("stop");
 			myMotor = 0;
 			retVal = 0;
 		}
