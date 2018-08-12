@@ -45,16 +45,19 @@ public class CarController : EventReceiver {
 			Debug.Log("forward");
 			myMotor = 4;
 			retVal = 0;
+			response = gameObject.name + ":OK";
 		}
 		else if(message == "back"){
 			Debug.Log("back");
 			myMotor = -4;
 			retVal = 0;
+			response = gameObject.name + ":OK";
 		}
 		else if(message == "stop"){
 			Debug.Log("stop");
 			myMotor = 0;
 			retVal = 0;
+			response = gameObject.name + ":OK";
 		}
 
 		return retVal;

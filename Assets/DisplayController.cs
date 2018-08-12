@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 public class DisplayController : EventReceiver {
 
-	private string setimage = "setimage:";
+	private string frame = "frame:";
 
 	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
 	{
@@ -17,18 +18,29 @@ public class DisplayController : EventReceiver {
 		else{//remove header until first .
 			message = message.Substring(temp);
 		}
-		Debug.Log("DisplayController received Event:'" + message + "'");
+		//Debug.Log("DisplayController received Event:'" + message + "'");
 		if(message == "identify"){
 			response = "id:display:" + gameObject.name; // + ":setimage";
 			retVal = 0;
 		}
-		else if(message.StartsWith(setimage) == true){
-			Debug.Log("setimage");
-			message = message.Substring(setimage.Length);
+		else if(message.StartsWith(frame) == true){
+
+			message = message.Substring(frame.Length);
+			Debug.Log("data len '" + message.Length + "'");
+                        byte[] bytes = Encoding.ASCII.GetBytes(message);
+
 			//decode message (gzip compressed data)
+			var imgdata = bytes;//GzipUtil.DecompressEncode(bytes);
+
+			//copy array to texture
+			Texture2D texture = new Texture2D(30, 30);
+			texture.LoadRawTextureData(imgdata);//new Rect(0, 0, 320, 320), 0, 0);
+			texture.Apply();
+
 			//set newTex to received image data
-			//set gameObject.GetComponent<Renderer>().material.mainTexture = newTex;
-			response = gameObject.name + "OK";
+			gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+
+			response = gameObject.name + ":OK";
 			retVal = 0;
 		}
 		return retVal;

@@ -16,7 +16,7 @@ public class NetworkListner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(myUDPRT.ReceivedMsg != null){
-			Debug.Log("Received udp packet:'" + myUDPRT.ReceivedMsg + "'");
+			Debug.Log("Received udp packet:'" + myUDPRT.ReceivedMsg.Length + "'");
 			if(HandleMessage(myUDPRT.ReceivedMsg) == -1){
 				Debug.Log("Could not parse message:" + myUDPRT.ReceivedMsg);
 			}

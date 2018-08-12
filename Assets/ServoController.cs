@@ -42,7 +42,7 @@ public class ServoController : EventReceiver {
 				targetAngle = (float)x;
 			}
 
-			response = gameObject.name + "OK";
+			response = gameObject.name + ":OK";
 			retVal = 0;
 		}
 		return retVal;

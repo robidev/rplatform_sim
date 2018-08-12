@@ -21,5 +21,21 @@ class GzipUtil {
 		return memory.ToArray();//Convert.ToBase64String(memory.ToArray());
 	    }
 	}
+
+	public static byte[] DecompressEncode(byte[] data) {
+
+		using (var inStream = new MemoryStream(data))
+		using (var bigStream = new GZipStream(inStream, CompressionMode.Decompress))
+		using (var bigStreamOut = new MemoryStream())
+		{
+        	    byte[] buffer = new byte[16 * 1024];
+        	    int bytesRead;
+        	    while ((bytesRead = bigStream.Read(buffer, 0, buffer.Length)) > 0)
+        	    {
+        	        bigStreamOut.Write(buffer, 0, bytesRead);
+        	    }		    
+		    return bigStreamOut.ToArray();
+		}
+	}
 }
 

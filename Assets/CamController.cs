@@ -27,7 +27,7 @@ public class CamController : EventReceiver {
 		}
 		else if(message == "getimage"){
 			Debug.Log("getimage");
-			response = gameObject.name + "OK";
+			response = gameObject.name + ":OK";
 			retVal = 0;
 			grab = true;
 		}

@@ -36,7 +36,7 @@ public class StepperController : EventReceiver {
 			message = message.Substring(steps.Length);
 			//
 			
-			response = gameObject.name + "OK";
+			response = gameObject.name + ":OK";
 			retVal = 0;
 		}
 		return retVal;
