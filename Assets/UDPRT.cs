@@ -47,7 +47,7 @@ public class UDPRT
     private void ReceiveIt(IAsyncResult result)
     {
         DATA = (udpc.EndReceive(result, ref IP));
-        Debug.Log("data length:" + DATA.Length);
+        //Debug.Log("data length:" + DATA.Length);
         ReceivedMsg = Encoding.UTF8.GetString(DATA);
         StartUdpReceive();
     }

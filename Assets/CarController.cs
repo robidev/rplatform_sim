@@ -7,11 +7,13 @@ public class CarController : EventReceiver {
 	public float maxMotorTorque; // maximum torque the motor can apply to wheel
 	public float maxSteeringAngle; // maximum steer angle the wheel can have
 	public float myMotor = 0;
+        private float mySteering = 0;
+        private string steerangle = "steerangle:";
 
 	public void FixedUpdate()
 	{
 	    float motor = (maxMotorTorque * Input.GetAxis("Vertical")) + myMotor;
-	    float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
+	    float steering = maxSteeringAngle * Input.GetAxis("Horizontal") + mySteering;
 	    //Debug.Log("steeringval:" + steering.ToString());
 
 	    foreach (AxleInfo axleInfo in axleInfos) {
@@ -59,7 +61,19 @@ public class CarController : EventReceiver {
 			retVal = 0;
 			response = gameObject.name + ":OK";
 		}
+                else if(message.StartsWith(steerangle) == true){
+			Debug.Log("steerangle");
+			message = message.Substring(steerangle.Length);
+			
+			int x = 0;
+			if (int.TryParse(message, out x))
+			{
+				mySteering = (float)x;
+			}
 
+			response = gameObject.name + ":OK";
+			retVal = 0;
+		}
 		return retVal;
 	}
 }
