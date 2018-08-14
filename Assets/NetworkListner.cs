@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkListner : MonoBehaviour {
-	//public GameObject player;
 	public List<GameObject> gameObjectList;
 	public UDPRT myUDPRT = null;
 	// Use this for initialization
 	void Start () {
+		//myTCPRT = new UDPRT(4000);Debug.Log("listening on UDP 4000");//
 		myUDPRT = new UDPRT(5000);
 		Debug.Log("listening on UDP 5000");
 		
@@ -15,12 +15,13 @@ public class NetworkListner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(myUDPRT.ReceivedMsg != null){
-			Debug.Log("Received udp packet:'" + myUDPRT.ReceivedMsg.Length + "'");
-			if(HandleMessage(myUDPRT.ReceivedMsg) == -1){
-				Debug.Log("Could not parse message:" + myUDPRT.ReceivedMsg);
+		string msg;
+		while( ( msg = myUDPRT.ReceiveProcessor() ) != null){
+			Debug.Log("Received udp packet:'" + msg.Length + "'");
+			if(HandleMessage(msg) == -1){
+				Debug.Log("Could not parse message:" + msg);
 			}
-			myUDPRT.ReceivedMsg = null;
+			//myUDPRT.ReceivedMsg = null;
 		}
 	}
 	void OnDestroy() {
@@ -41,6 +42,7 @@ public class NetworkListner : MonoBehaviour {
 				int temp = eventReceiver.parseEvent(message, ref response, ref myUDPRT);
 				if(temp != -1){
 					Debug.Log(myUDPRT.IP.Address.ToString() + " msg:'" + response + "'");
+					//myTCPRT.AddToPacketList(response);
 					UDPRT SendUDP = new UDPRT(5001, myUDPRT.IP.Address.ToString(), response);
 					if (!SendUDP.messageSent){;}
 					retVal++; // increment each time we have a succesful parse
@@ -52,7 +54,8 @@ public class NetworkListner : MonoBehaviour {
 
 		}
                 if(message == "all.identify"){
-                	UDPRT SendUDP_resp = new UDPRT(5001, myUDPRT.IP.Address.ToString(), "identify:done");
+                	//myTCPRT.AddToPacketList("identify:done");//
+			UDPRT SendUDP_resp = new UDPRT(5001, myUDPRT.IP.Address.ToString(), "identify:done");
 		}
 		return retVal;
 	}

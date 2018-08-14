@@ -2315,4 +2315,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 2115332122}
   grab: 0
-  obj: {fileID: 157020901}

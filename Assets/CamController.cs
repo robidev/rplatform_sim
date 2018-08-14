@@ -7,7 +7,6 @@ public class CamController : EventReceiver {
 	public Camera cam;
         public bool grab;
 	private RenderTexture main;
-	public GameObject obj;
 
 	// Use this for initialization
 	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
@@ -41,7 +40,6 @@ public class CamController : EventReceiver {
 
 		var newTex = Instantiate (image);
 		TextureScale.Bilinear (newTex, 320, 320);
-		//obj.GetComponent<Renderer>().material.mainTexture = newTex;
 
 		var zipdata = GzipUtil.CompressEncode(newTex.GetRawTextureData());
 		//Debug.Log("before:" + newTex.GetRawTextureData().Length + " after:" + zipdata.Length);
