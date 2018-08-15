@@ -8,6 +8,7 @@ public class GPIOController : EventReceiver  {
 	private string writeoutput = "set:";
 	private static uint MAX_GPIO = 4;
 	private int[] GPIO = new int[MAX_GPIO];
+	private int[] GPIO_old = new int[MAX_GPIO];
 	public GameObject[] GPIOObjectList = new GameObject[MAX_GPIO];
 
 	// Use this for initialization
@@ -16,6 +17,11 @@ public class GPIOController : EventReceiver  {
 		{
 			GPIO[i] = 0;
 		}
+	}
+
+	public void setGPIO(int x,int y)
+	{
+		GPIO[x] = y;
 	}
 	
 	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
@@ -61,7 +67,7 @@ public class GPIOController : EventReceiver  {
 			{
 				if(x >=0 && x < MAX_GPIO)
 				{
-					GPIO[x] = y;
+					GPIO[x] = y; GPIO_old[x] = y;
 					UpdateGPIO(x,y);
 					response = gameObject.name + ":OK " + x + "=" + y;
 				}
@@ -77,6 +83,16 @@ public class GPIOController : EventReceiver  {
 
 	// Update is called once per frame
 	void Update () {
+		for (int i = 0; i < MAX_GPIO; i++)
+		{
+			if(GPIO[i] != GPIO_old[i])
+			{
+				UpdateGPIO(i,GPIO[i]);
+				GPIO_old[i] = GPIO[i];
+				UDPRT SendUDP = new UDPRT(5001, "127.0.0.1", gameObject.name + ":event.GPIO" + i + "=" + GPIO[i]);
+				if (!SendUDP.messageSent){;}
+			}
+		}
 	}
 
 	void UpdateGPIO(int x, int y)

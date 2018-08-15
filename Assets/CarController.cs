@@ -10,6 +10,16 @@ public class CarController : EventReceiver {
         private float mySteering = 0;
         private string steerangle = "steerangle:";
 
+    	void OnTriggerEnter() {
+        	var gpio = GameObject.Find("gpio").GetComponent<GPIOController>();
+		gpio.setGPIO(3,1);
+    	}
+
+    	void OnTriggerExit() {
+        	var gpio = GameObject.Find("gpio").GetComponent<GPIOController>();
+		gpio.setGPIO(3,0);
+    	}
+
 	public void FixedUpdate()
 	{
 	    float motor = (maxMotorTorque * Input.GetAxis("Vertical")) + myMotor;
