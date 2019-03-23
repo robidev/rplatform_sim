@@ -7,13 +7,17 @@ public class ServoController : EventReceiver {
 	private string servo = "servo:";
 	private float targetAngle = 0;
 	private float deadzone = 2;
-	private HingeJoint hinge;
-	private JointMotor motor;
+	private float speed = 0.9f;
+	/*private HingeJoint hinge;
+	private JointMotor motor;*/
+	public Transform ServoArm; 
 
 	public void Start()
 	{
-		hinge = GetComponent<HingeJoint>();
+		/*hinge = GetComponent<HingeJoint>();
 		motor = hinge.motor;
+		hinge.useMotor = true;
+		motor.targetVelocity = 0;*/
 	}
 
 	public override int parseEvent(string message, ref string response, ref UDPRT MyUdp)
@@ -50,7 +54,15 @@ public class ServoController : EventReceiver {
 
 	public void Update()
 	{
-		if (targetAngle < hinge.angle - deadzone || targetAngle > hinge.angle + deadzone)
+		Debug.Log(ServoArm.localEulerAngles.x);
+		if(targetAngle > ServoArm.localEulerAngles.x + deadzone || targetAngle < ServoArm.localEulerAngles.x - deadzone)
+		{
+			if(targetAngle > ServoArm.localEulerAngles.x)
+				ServoArm.Rotate (speed,0,0);
+			else
+				ServoArm.Rotate (-speed,0,0);
+		}
+		/*if (targetAngle < hinge.angle - deadzone || targetAngle > hinge.angle + deadzone)
 		{
 			if (targetAngle > hinge.angle)
 				motor.targetVelocity = 10;
@@ -65,6 +77,6 @@ public class ServoController : EventReceiver {
 			motor.targetVelocity = 0;
 			hinge.motor = motor;
 			hinge.useMotor = true;
-		}
+		}*/
 	}
 }

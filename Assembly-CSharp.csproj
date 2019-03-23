@@ -57,7 +57,10 @@
      <Compile Include="Assets\DisplayController.cs" />
      <Compile Include="Assets\EventReceiver.cs" />
      <Compile Include="Assets\GPIOController.cs" />
+     <Compile Include="Assets\GPSController.cs" />
      <Compile Include="Assets\GzipUtil.cs" />
+     <Compile Include="Assets\IMUController.cs" />
+     <Compile Include="Assets\LIDARController.cs" />
      <Compile Include="Assets\MicController.cs" />
      <Compile Include="Assets\NetworkListner.cs" />
      <Compile Include="Assets\ServoController.cs" />
